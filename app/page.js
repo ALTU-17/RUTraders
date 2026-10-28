@@ -42,6 +42,7 @@ export default function Home() {
   const [tab, setTab] = useState('new');
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState('');
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const h = loadHistory();
@@ -49,9 +50,23 @@ export default function Home() {
     setInv(blankInvoice(h));
   }, []);
 
+  // Beautiful 3-second splash loader on first load
+  useEffect(() => {
+    const timer = setTimeout(() => setReady(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   const totals = useMemo(() => (inv ? calcTotals(inv.items) : { subtotal: 0, gst: 0, total: 0 }), [inv]);
 
-  if (!inv) return <main className="wrap"><p className="muted">Loading...</p></main>;
+  const showLoader = !inv || !ready;
+
+  if (showLoader) return (
+    <div className="loader">
+      <div className="spinner" />
+      <h2 className="loaderTitle">R U Traders</h2>
+      <p className="loaderSub">Invoice Generator</p>
+    </div>
+  );
 
   const showToast = (msg) => {
     setToast(msg);
@@ -357,6 +372,17 @@ export default function Home() {
       )}
 
       {toast && <div className="toast">{toast}</div>}
+
+      <footer className="footer">
+        Developed by{' '}
+        <a
+          href="https://altamash-shaikh-portfolio.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <strong>Altamash Shaikh</strong>
+        </a>
+      </footer>
     </main>
   );
 }

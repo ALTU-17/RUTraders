@@ -3,6 +3,7 @@ import './globals.css';
 export const metadata = {
   title: 'R U Traders - Invoice',
   description: 'Invoice generator for R U Traders',
+  authors: [{ name: 'Altamash Shaikh' }],
 };
 
 export const viewport = {
